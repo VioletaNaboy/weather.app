@@ -1,0 +1,49 @@
+body {
+  font-family: sans-serif;
+}
+form {
+  width: 100%;
+  margin-bottom: 50px;
+}
+.search {
+  width: 60%;
+}
+.container-selection-date {
+  margin-top: 50px;
+}
+.title {
+  font-size: 65px;
+}
+.temperature {
+  font-size: 58px;
+}
+.wrapper-temperature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon {
+  color: cadetblue;
+  font-size: 55px;
+}
+.addition-info {
+  list-style: none;
+}
+.units button {
+  border: none;
+  background: none;
+}
+.units button:hover,
+.units button:focus {
+  color: crimson;
+  font-weight: 700;
+}
+.units {
+  display: flex;
+  flex-direction: column;
+}
+.units button.active {
+  font-size: 24px;
+  color: cadetblue;
+  font-weight: 900;
+}
