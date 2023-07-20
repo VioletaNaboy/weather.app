@@ -40,6 +40,7 @@ function displayThemp(response) {
   const currentCityEl = document.querySelector(".city");
   const windEl = document.querySelector(".wind span");
   const humidityEl = document.querySelector(".humidity span");
+  const iconEl = document.querySelector(".icon");
   const temp = Math.round(response.data.main.temp);
   const humidity = Math.round(response.data.main.humidity);
   const windSpeed = Math.round(response.data.wind.speed);
@@ -48,6 +49,14 @@ function displayThemp(response) {
   currentCityEl.innerHTML = city;
   windEl.innerHTML = windSpeed;
   humidityEl.innerHTML = humidity;
+  iconEl.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+  );
+  iconEl.setAttribute(
+    "alt",
+    `https://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png`
+  );
 }
 // function addListenerForUnits(unit) {
 //   const temperature = document.querySelector(".temperature");
@@ -76,7 +85,7 @@ function displayCurrentDay() {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday"
+    "Saturday",
   ];
   let weekday = weekdays[date.getDay()];
   const months = [
@@ -91,7 +100,7 @@ function displayCurrentDay() {
     "September",
     "October",
     "November",
-    "December"
+    "December",
   ];
   let month = months[date.getMonth()];
   let day = date.getDate();
