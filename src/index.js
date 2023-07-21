@@ -3,7 +3,7 @@ const units = document.querySelectorAll(".units button");
 const unitsArray = Array.from(units);
 const currentDayEl = document.querySelector(".current-day");
 const currentCityBtn = document.querySelector(".btn-current");
-displayCurrentDay();
+searchCurrentCity();
 searchForm.addEventListener("submit", searchCity);
 currentCityBtn.addEventListener("click", searchCurrentCity);
 function searchCity(event) {
@@ -15,7 +15,10 @@ function searchCity(event) {
   serviceAPI(getedAPI);
 }
 function searchCurrentCity(event) {
-  event.preventDefault();
+  if (event) {
+    event.preventDefault();
+  }
+
   navigator.geolocation.getCurrentPosition(getPosition);
   function getPosition(position) {
     let lat = position.coords.latitude;
@@ -42,14 +45,17 @@ function displayThemp(response) {
   const windEl = document.querySelector(".wind span");
   const humidityEl = document.querySelector(".humidity span");
   const iconEl = document.querySelector(".icon");
+  const descriptionEl = document.querySelector(".description");
   const temp = Math.round(response.data.main.temp);
   const humidity = Math.round(response.data.main.humidity);
   const windSpeed = Math.round(response.data.wind.speed);
+  const description = response.data.weather[0].description;
   const city = response.data.name;
   temperature.innerHTML = temp;
   currentCityEl.innerHTML = city;
   windEl.innerHTML = windSpeed;
   humidityEl.innerHTML = humidity;
+  descriptionEl.innerHTML = description;
   iconEl.setAttribute(
     "src",
     `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
@@ -58,6 +64,7 @@ function displayThemp(response) {
     "alt",
     `https://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png`
   );
+  displayCurrentDay();
   units.forEach((unit) => addListenerForUnits(unit, temp));
 }
 function addListenerForUnits(unit, CTemperature) {

@@ -23,11 +23,12 @@ form {
   justify-content: center;
 }
 .icon {
-  color: cadetblue;
-  font-size: 55px;
+  width: 124px;
+  height: auto;
 }
 .addition-info {
   list-style: none;
+  text-transform: capitalize;
 }
 .units button {
   border: none;
