@@ -1,11 +1,10 @@
 const searchForm = document.querySelector(".form");
-// const units = document.querySelectorAll(".units button");
-// const unitsArray = Array.from(units);
+const units = document.querySelectorAll(".units button");
+const unitsArray = Array.from(units);
 const currentDayEl = document.querySelector(".current-day");
 const currentCityBtn = document.querySelector(".btn-current");
 displayCurrentDay();
 searchForm.addEventListener("submit", searchCity);
-// units.forEach(addListenerForUnits);
 currentCityBtn.addEventListener("click", searchCurrentCity);
 function searchCity(event) {
   event.preventDefault();
@@ -36,6 +35,8 @@ function serviceAPI(getedAPI) {
 }
 
 function displayThemp(response) {
+  unitsArray[0].classList.add("active");
+  unitsArray[1].classList.remove("active");
   const temperature = document.querySelector(".temperature");
   const currentCityEl = document.querySelector(".city");
   const windEl = document.querySelector(".wind span");
@@ -57,24 +58,23 @@ function displayThemp(response) {
     "alt",
     `https://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png`
   );
+  units.forEach((unit) => addListenerForUnits(unit, temp));
 }
-// function addListenerForUnits(unit) {
-//   const temperature = document.querySelector(".temperature");
-//   const CTemperature = temperature.textContent;
-
-//   unit.addEventListener("click", (event) => {
-//     if (event.target === unitsArray[0]) {
-//       temperature.textContent = `${CTemperature}`;
-//       unitsArray[0].classList.add("active");
-//       unitsArray[1].classList.remove("active");
-//     }
-//     if (event.target === unitsArray[1]) {
-//       temperature.textContent = `${Math.round(CTemperature * 1.8 + 32)}`;
-//       unitsArray[1].classList.add("active");
-//       unitsArray[0].classList.remove("active");
-//     }
-//   });
-// }
+function addListenerForUnits(unit, CTemperature) {
+  const temperature = document.querySelector(".temperature");
+  unit.addEventListener("click", (event) => {
+    if (event.target === unitsArray[0]) {
+      temperature.textContent = CTemperature;
+      unitsArray[0].classList.add("active");
+      unitsArray[1].classList.remove("active");
+    }
+    if (event.target === unitsArray[1]) {
+      temperature.textContent = Math.round(CTemperature * 1.8 + 32);
+      unitsArray[1].classList.add("active");
+      unitsArray[0].classList.remove("active");
+    }
+  });
+}
 function displayCurrentDay() {
   let date = new Date();
 
