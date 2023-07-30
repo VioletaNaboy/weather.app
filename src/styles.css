@@ -2,11 +2,13 @@ body {
   font-family: sans-serif;
 }
 form {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: 50px;
 }
 .search {
-  width: 60%;
+  min-width: 60%;
 }
 .container-selection-date {
   margin-top: 50px;
