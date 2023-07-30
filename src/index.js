@@ -3,6 +3,17 @@ const units = document.querySelectorAll(".units button");
 const unitsArray = Array.from(units);
 const currentDayEl = document.querySelector(".current-day");
 const currentCityBtn = document.querySelector(".btn-current");
+ const forecastEl = document.querySelector(".forecast");
+const weekdays = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+let weekday;
 searchCurrentCity();
 searchForm.addEventListener("submit", searchCity);
 currentCityBtn.addEventListener("click", searchCurrentCity);
@@ -38,6 +49,7 @@ function serviceAPI(getedAPI) {
 }
 
 function displayThemp(response) {
+  forecastEl.innerHTML = "";
   unitsArray[0].classList.add("active");
   unitsArray[1].classList.remove("active");
   const temperature = document.querySelector(".temperature");
@@ -60,11 +72,12 @@ function displayThemp(response) {
     "src",
     `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
-  iconEl.setAttribute(
-    "alt",
-    `https://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png`
-  );
+  iconEl.setAttribute("alt", `${response.data.weather[0].description}`);
+
   displayCurrentDay();
+  let lat = response.data.coord.lat;
+  let lon = response.data.coord.lon;
+  getForecast(lat, lon, weekday);
   units.forEach((unit) => addListenerForUnits(unit, temp));
 }
 function addListenerForUnits(unit, CTemperature) {
@@ -84,17 +97,7 @@ function addListenerForUnits(unit, CTemperature) {
 }
 function displayCurrentDay() {
   let date = new Date();
-
-  const weekdays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  let weekday = weekdays[date.getDay()];
+  weekday = weekdays[date.getDay()];
   const months = [
     "January",
     "February",
@@ -114,6 +117,7 @@ function displayCurrentDay() {
   let year = date.getFullYear();
   let time = `${date.getUTCHours()}:${date.getUTCMinutes()}`;
   currentDayEl.innerHTML = `${weekday} ${time}, ${month} ${day}, ${year}`;
+  return weekday;
 }
 // const selectedCity = prompt("Enter a city").trim().toLowerCase();
 // if (Object.keys(weather).includes(selectedCity)) {
@@ -130,3 +134,39 @@ function displayCurrentDay() {
 //     `Sorry, we don't know the weather for this city, try going to https://www.google.com/search?q=weather+${selectedCity}`
 //   );
 // }
+function getForecast(lat, lon) {
+  const keyAPI = "e6c2364656962bdcb16bc352fc42569a";
+  let getedAPIForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${keyAPI}&units=metric`;
+  axios
+    .get(getedAPIForecast)
+    .then(displayForecast)
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+function displayForecast(r) {
+  const currentDayIndex = weekdays.indexOf(weekday);
+  if (currentDayIndex === -1) {
+    throw new Error("Invalid currentDay");
+  }
+  const nextWeekdays = [
+    ...weekdays.slice(currentDayIndex + 1),
+    ...weekdays.slice(0, currentDayIndex),
+  ];
+  const forecast = r.data.daily;
+  const markup = nextWeekdays
+    .map((day, index) => {
+      return `<li class="col card">
+      <div>${day}</div>
+      <img src="https://openweathermap.org/img/wn/${forecast[index + 1].weather[0].icon}@2x.png" 
+      alt="${forecast[index + 1].weather[0].description}" />
+      <div>
+      <span class="tmp min">
+      ${Math.round(forecast[index + 1].temp.min)}°C /</span>
+      <span class="tmp max"> ${Math.round(forecast[index + 1].temp.max)}°C</span>
+      </div>
+      </li>`;
+    })
+    .join("");
+  forecastEl.insertAdjacentHTML("afterbegin", markup);
+}
